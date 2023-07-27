@@ -8,7 +8,8 @@ CREATE TABLE IF NOT EXISTS tb_usuarios(
   tipo_cadastro VARCHAR(1) NULL,
   ativo VARCHAR(1) NULL,
   PRIMARY KEY (cod_usuario),
-  CONSTRAINT tp_cadastro CHECK (tipo_cadastro="A" and "C"));
+  CONSTRAINT tp_cadastro CHECK (tipo_cadastro="A" and "C"),
+  CONSTRAINT tp_ativo CHECK (ativo="S" and "N"));
 
 CREATE TABLE IF NOT EXISTS tb_cidades(
   cod_cidade INT NOT NULL AUTO_INCREMENT,
@@ -29,14 +30,14 @@ CREATE TABLE IF NOT EXISTS tb_enderecos(
   CONSTRAINT fk_tb_enderecos_tb_usuarios
     FOREIGN KEY (fk_cod_usuario) REFERENCES tb_usuarios (cod_usuario),
   CONSTRAINT fk_tb_enderecos_tb_cidades
-    FOREIGN KEY (fk_cod_cidade) REFERENCES tb_cidades (cod_cidade)
+    FOREIGN KEY (fk_cod_cidade) REFERENCES tb_cidades (cod_cidade),
     CONSTRAINT tp_ativo CHECK (ativo="S" and "N"));
 
 CREATE TABLE IF NOT EXISTS tb_categoria(
   cod_categoria INT NOT NULL AUTO_INCREMENT,
   nome_categoria VARCHAR(50) NOT NULL,
   ativo VARCHAR(1) NULL,
-  PRIMARY KEY (cod_categoria)
+  PRIMARY KEY (cod_categoria),
   CONSTRAINT tp_ativo CHECK (ativo="S" and "N"));
 
 CREATE TABLE IF NOT EXISTS tb_produtos (
