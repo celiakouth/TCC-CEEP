@@ -8,8 +8,9 @@ CREATE TABLE IF NOT EXISTS tb_usuarios(
   tipo_cadastro VARCHAR(1) NULL,
   ativo VARCHAR(1) NULL,
   PRIMARY KEY (cod_usuario),
-  CONSTRAINT tp_cadastro CHECK (tipo_cadastro="A" and "C"),
-  CONSTRAINT tp_ativo CHECK (ativo="S" and "N"));
+  CONSTRAINT tp_cadastro CHECK (tipo_cadastro IN ('A' OR 'C')),
+  CONSTRAINT tp_ativo CHECK (ativo IN ('S' OR 'N'))
+);
 
 CREATE TABLE IF NOT EXISTS tb_cidades(
   cod_cidade INT NOT NULL AUTO_INCREMENT,
@@ -31,14 +32,16 @@ CREATE TABLE IF NOT EXISTS tb_enderecos(
     FOREIGN KEY (fk_cod_usuario) REFERENCES tb_usuarios (cod_usuario),
   CONSTRAINT fk_tb_enderecos_tb_cidades
     FOREIGN KEY (fk_cod_cidade) REFERENCES tb_cidades (cod_cidade),
-    CONSTRAINT tp_ativo CHECK (ativo="S" and "N"));
+    CONSTRAINT tp_ativo CHECK (ativo IN ('S' OR 'N'))
+);
 
-CREATE TABLE IF NOT EXISTS tb_categoria(
+CREATE TABLE IF NOT EXISTS tb_categorias(
   cod_categoria INT NOT NULL AUTO_INCREMENT,
   nome_categoria VARCHAR(50) NOT NULL,
   ativo VARCHAR(1) NULL,
   PRIMARY KEY (cod_categoria),
-  CONSTRAINT tp_ativo CHECK (ativo="S" and "N"));
+  CONSTRAINT tp_ativo CHECK (ativo IN ('S' OR 'N'))
+);
 
 CREATE TABLE IF NOT EXISTS tb_produtos (
   cod_produto INT NOT NULL AUTO_INCREMENT,
@@ -54,7 +57,8 @@ CREATE TABLE IF NOT EXISTS tb_produtos (
   CONSTRAINT fk_tb_produtos_tb_categoria
     FOREIGN KEY (fk_cod_categoria)
     REFERENCES tb_categoria (cod_categoria),
-  CONSTRAINT tp_ativo CHECK (ativo="S" and "N"));
+  CONSTRAINT tp_ativo CHECK (ativo IN ('S' OR 'N'))
+);
 
 CREATE TABLE IF NOT EXISTS tb_pedidos(
   cod_pedido INT NOT NULL,
@@ -67,8 +71,9 @@ CREATE TABLE IF NOT EXISTS tb_pedidos(
   CONSTRAINT fk_tb_pedidos_tb_usuarios
     FOREIGN KEY (fk_cod_usuario)
     REFERENCES tb_usuarios (cod_usuario),
-  CONSTRAINT tp_pagamento CHECK (tipo_pagamento="P" and "D"),
-  CONSTRAINT tp_ativo CHECK (ativo="S" and "N"));
+    CONSTRAINT tp_pagamento CHECK (tipo_pagamento IN ('P' OR 'D')),
+    CONSTRAINT tp_ativo CHECK (ativo IN ('S' OR 'N'))
+);
 
 CREATE TABLE IF NOT EXISTS tb_pedidos_produtos(
   cod_pedido_produto INT NOT NULL AUTO_INCREMENT,
