@@ -13,29 +13,31 @@ CREATE TABLE IF NOT EXISTS tb_usuarios(
 CREATE TABLE IF NOT EXISTS tb_cidades(
   cod_cidade INT NOT NULL AUTO_INCREMENT,
   nome_cidade VARCHAR(100) NOT NULL,
-  estado_cidade VARCHAR(2) NOT NULL,
+  estado VARCHAR(2) NOT NULL,
   PRIMARY KEY (cod_cidade));
 
 CREATE TABLE IF NOT EXISTS tb_enderecos(
   cod_endereco INT NOT NULL AUTO_INCREMENT,
-  nome_cidade VARCHAR(100) NOT NULL,
-  estado VARCHAR(2) NOT NULL,
   rua VARCHAR(100) NOT NULL,
   cep INT NOT NULL,
-  numero_casa INT NOT NULL,
+  numero INT NOT NULL,
   complemento VARCHAR(50) NULL,
+  ativo VARCHAR(1) NULL,
   fk_cod_usuario INT NOT NULL,
   fk_cod_cidade INT NOT NULL,
   PRIMARY KEY (cod_endereco),
   CONSTRAINT fk_tb_enderecos_tb_usuarios
     FOREIGN KEY (fk_cod_usuario) REFERENCES tb_usuarios (cod_usuario),
   CONSTRAINT fk_tb_enderecos_tb_cidades
-    FOREIGN KEY (fk_cod_cidade) REFERENCES tb_cidades (cod_cidade));
+    FOREIGN KEY (fk_cod_cidade) REFERENCES tb_cidades (cod_cidade)
+    CONSTRAINT tp_ativo CHECK (ativo="S" and "N"));
 
 CREATE TABLE IF NOT EXISTS tb_categoria(
   cod_categoria INT NOT NULL AUTO_INCREMENT,
   nome_categoria VARCHAR(50) NOT NULL,
-  PRIMARY KEY (cod_categoria));
+  ativo VARCHAR(1) NULL,
+  PRIMARY KEY (cod_categoria)
+  CONSTRAINT tp_ativo CHECK (ativo="S" and "N"));
 
 CREATE TABLE IF NOT EXISTS tb_produtos (
   cod_produto INT NOT NULL AUTO_INCREMENT,
@@ -43,8 +45,8 @@ CREATE TABLE IF NOT EXISTS tb_produtos (
   preco FLOAT(5,2) NOT NULL,
   estoque INT NOT NULL,
   descricao VARCHAR(200) NOT NULL,
-  tamanho_produto VARCHAR(15) NOT NULL,
-  cor_produto VARCHAR(10) NOT NULL,
+  tamanho VARCHAR(15) NOT NULL,
+  cor VARCHAR(10) NOT NULL,
   ativo VARCHAR(1) NULL,
   fk_cod_categoria INT NOT NULL,
   PRIMARY KEY (cod_produto),
@@ -56,7 +58,7 @@ CREATE TABLE IF NOT EXISTS tb_produtos (
 CREATE TABLE IF NOT EXISTS tb_pedidos(
   cod_pedido INT NOT NULL,
   valor_frete FLOAT(5,2) NOT NULL,
-  cod_transportadora VARCHAR(255) NULL,
+  codigo_transportadora VARCHAR(255) NULL,
   tipo_pagamento VARCHAR(1) NULL,
   ativo VARCHAR(1) NULL,
   fk_cod_usuario INT NOT NULL,
