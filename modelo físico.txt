@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS tb_enderecos(
     FOREIGN KEY (fk_cod_usuario) REFERENCES tb_usuarios (cod_usuario),
   CONSTRAINT fk_tb_enderecos_tb_cidades
     FOREIGN KEY (fk_cod_cidade) REFERENCES tb_cidades (cod_cidade),
-    CONSTRAINT tp_ativo CHECK (ativo IN ('S','N'))
+    CONSTRAINT tp_ativo2 CHECK (ativo IN ('S','N'))
 );
 
 
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS tb_categorias(
   cod_categoria INT AUTO_INCREMENT PRIMARY KEY,
   nome_categoria VARCHAR(50) NOT NULL,
   ativo VARCHAR(1) DEFAULT 'S',
-  CONSTRAINT tp_ativo CHECK (ativo IN ('S','N'))
+  CONSTRAINT tp_ativo3 CHECK (ativo IN ('S','N'))
 );
 
 
@@ -56,8 +56,8 @@ CREATE TABLE IF NOT EXISTS tb_produtos (
   fk_cod_categoria INT NOT NULL,
   CONSTRAINT fk_tb_produtos_tb_categoria
     FOREIGN KEY (fk_cod_categoria)
-    REFERENCES tb_categoria (cod_categoria),
-  CONSTRAINT tp_ativo CHECK (ativo IN ('S','N'))
+    REFERENCES tb_categorias (cod_categoria),
+  CONSTRAINT tp_ativo4 CHECK (ativo IN ('S','N'))
 );
 
 
@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS tb_pedidos(
     FOREIGN KEY (fk_cod_usuario)
     REFERENCES tb_usuarios (cod_usuario),
     CONSTRAINT tp_pagamento CHECK (tipo_pagamento IN ('P','D')),
-    CONSTRAINT tp_ativo CHECK (ativo IN ('S','N'))
+    CONSTRAINT tp_ativo5 CHECK (ativo IN ('S','N'))
 );
 
 
