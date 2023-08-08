@@ -1,36 +1,33 @@
 CREATE TABLE IF NOT EXISTS tb_usuarios(
-  cod_usuario INT AUTO_INCREMENT,
+  cod_usuario INT AUTO_INCREMENT PRIMARY KEY,
   nome_usuario VARCHAR(100) NOT NULL,
   email_usuario VARCHAR(50) NOT NULL,
   telefone_usuario BIGINT(11) NOT NULL,
   cpf_usuario BIGINT(12) NOT NULL,
   senha_usuario VARCHAR(15) NOT NULL,
-  tipo_cadastro VARCHAR(1) NULL,
-  ativo VARCHAR(1) NULL,
-  PRIMARY KEY (cod_usuario),
+  tipo_cadastro VARCHAR(1) DEFAULT 'C',
+  ativo VARCHAR(1) DEFAULT 'S',
   CONSTRAINT tp_cadastro CHECK (tipo_cadastro IN ('A','C')),
   CONSTRAINT tp_ativo CHECK (ativo IN ('S','N'))
 );
 
 
 CREATE TABLE IF NOT EXISTS tb_cidades(
-  cod_cidade INT AUTO_INCREMENT,
+  cod_cidade INT AUTO_INCREMENT PRIMARY KEY,
   nome_cidade VARCHAR(100) NOT NULL,
-  estado VARCHAR(2) NOT NULL,
-  PRIMARY KEY (cod_cidade)
+  estado VARCHAR(2) NOT NULL
 );
 
 
 CREATE TABLE IF NOT EXISTS tb_enderecos(
-  cod_endereco INT AUTO_INCREMENT,
+  cod_endereco INT AUTO_INCREMENT PRIMARY KEY,
   rua VARCHAR(100) NOT NULL,
   cep INT NOT NULL,
   numero INT NOT NULL,
   complemento VARCHAR(50) NULL,
-  ativo VARCHAR(1) NULL,
+  ativo VARCHAR(1) DEFAULT 'S',
   fk_cod_usuario INT NOT NULL,
   fk_cod_cidade INT NOT NULL,
-  PRIMARY KEY (cod_endereco),
   CONSTRAINT fk_tb_enderecos_tb_usuarios
     FOREIGN KEY (fk_cod_usuario) REFERENCES tb_usuarios (cod_usuario),
   CONSTRAINT fk_tb_enderecos_tb_cidades
@@ -40,25 +37,23 @@ CREATE TABLE IF NOT EXISTS tb_enderecos(
 
 
 CREATE TABLE IF NOT EXISTS tb_categorias(
-  cod_categoria INT AUTO_INCREMENT,
+  cod_categoria INT AUTO_INCREMENT PRIMARY KEY,
   nome_categoria VARCHAR(50) NOT NULL,
-  ativo VARCHAR(1) NULL,
-  PRIMARY KEY (cod_categoria),
+  ativo VARCHAR(1) DEFAULT 'S',
   CONSTRAINT tp_ativo CHECK (ativo IN ('S','N'))
 );
 
 
 CREATE TABLE IF NOT EXISTS tb_produtos (
-  cod_produto INT AUTO_INCREMENT,
+  cod_produto INT AUTO_INCREMENT PRIMARY KEY,
   nome_produto VARCHAR(100) NOT NULL,
   preco FLOAT(5,2) NOT NULL,
   estoque INT NOT NULL,
   descricao VARCHAR(200) NOT NULL,
   tamanho VARCHAR(15) NOT NULL,
   cor VARCHAR(10) NOT NULL,
-  ativo VARCHAR(1) NULL,
+  ativo VARCHAR(1) DEFAULT 'S',
   fk_cod_categoria INT NOT NULL,
-  PRIMARY KEY (cod_produto),
   CONSTRAINT fk_tb_produtos_tb_categoria
     FOREIGN KEY (fk_cod_categoria)
     REFERENCES tb_categoria (cod_categoria),
@@ -67,13 +62,12 @@ CREATE TABLE IF NOT EXISTS tb_produtos (
 
 
 CREATE TABLE IF NOT EXISTS tb_pedidos(
-  cod_pedido INT AUTO_INCREMENT,
+  cod_pedido INT AUTO_INCREMENT PRIMARY KEY,
   valor_frete FLOAT(5,2) NOT NULL,
   codigo_transportadora VARCHAR(255) NULL,
-  tipo_pagamento VARCHAR(1) NULL,
-  ativo VARCHAR(1) NULL,
+  tipo_pagamento VARCHAR(1) DEFAULT 'D',
+  ativo VARCHAR(1) DEFAULT 'S',
   fk_cod_usuario INT NOT NULL,
-  PRIMARY KEY (cod_pedido),
   CONSTRAINT fk_tb_pedidos_tb_usuarios
     FOREIGN KEY (fk_cod_usuario)
     REFERENCES tb_usuarios (cod_usuario),
@@ -83,12 +77,11 @@ CREATE TABLE IF NOT EXISTS tb_pedidos(
 
 
 CREATE TABLE IF NOT EXISTS tb_pedidos_produtos(
-  cod_pedido_produto INT AUTO_INCREMENT,
+  cod_pedido_produto INT AUTO_INCREMENT PRIMARY KEY,
   quantidade INT NOT NULL,
   preco_pedido FLOAT(5,2) NOT NULL,
   fk_cod_produto INT NOT NULL,
   fk_cod_pedido INT NOT NULL,
-  PRIMARY KEY (cod_pedido_produto),
   CONSTRAINT fk_tb_pedidos_produtos_tb_produtos
     FOREIGN KEY (fk_cod_produto)
     REFERENCES tb_produtos (cod_produto),
@@ -99,10 +92,9 @@ CREATE TABLE IF NOT EXISTS tb_pedidos_produtos(
 
 
 CREATE TABLE IF NOT EXISTS tb_imagens(
-  cod_imagem INT AUTO_INCREMENT,
+  cod_imagem INT AUTO_INCREMENT PRIMARY KEY,
   imagem VARCHAR(255) NOT NULL,
   fk_cod_produto INT NOT NULL,
-  PRIMARY KEY (cod_imagem),
   CONSTRAINT fk_tb_imagens_tb_produtos
     FOREIGN KEY (fk_cod_produto)
     REFERENCES tb_produtos(cod_produto)
