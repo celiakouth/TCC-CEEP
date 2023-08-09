@@ -1,0 +1,118 @@
+CREATE TABLE IF NOT EXISTS tb_usuarios(
+  cod_usuario INT AUTO_INCREMENT PRIMARY KEY,
+  nome_usuario VARCHAR(100) NOT NULL,
+  email_usuario VARCHAR(50) NOT NULL,
+  telefone_usuario BIGINT(11) NOT NULL,
+  cpf_usuario BIGINT(12) NOT NULL,
+  senha_usuario VARCHAR(32) NOT NULL,
+  tipo_cadastro VARCHAR(1) DEFAULT 'C',
+  ativo VARCHAR(1) DEFAULT 'S',
+  CONSTRAINT tp_cadastro CHECK (tipo_cadastro IN ('A','C')),
+  CONSTRAINT tp_ativo CHECK (ativo IN ('S','N'))
+);
+
+
+CREATE TABLE IF NOT EXISTS tb_cidades(
+  cod_cidade INT AUTO_INCREMENT PRIMARY KEY,
+  nome_cidade VARCHAR(100) NOT NULL,
+  estado VARCHAR(2) NOT NULL
+);
+
+
+CREATE TABLE IF NOT EXISTS tb_enderecos(
+  cod_endereco INT AUTO_INCREMENT PRIMARY KEY,
+  rua VARCHAR(100) NOT NULL,
+  cep INT NOT NULL,
+  numero INT NOT NULL,
+  complemento VARCHAR(50) NULL,
+  ativo VARCHAR(1) DEFAULT 'S',
+  fk_cod_usuario INT NOT NULL,
+  fk_cod_cidade INT NOT NULL,
+  CONSTRAINT fk_tb_enderecos_tb_usuarios
+    FOREIGN KEY (fk_cod_usuario) REFERENCES tb_usuarios (cod_usuario),
+  CONSTRAINT fk_tb_enderecos_tb_cidades
+    FOREIGN KEY (fk_cod_cidade) REFERENCES tb_cidades (cod_cidade),
+    CONSTRAINT tp_ativo2 CHECK (ativo IN ('S','N'))
+);
+
+
+CREATE TABLE IF NOT EXISTS tb_categorias(
+  cod_categoria INT AUTO_INCREMENT PRIMARY KEY,
+  nome_categoria VARCHAR(50) NOT NULL,
+  ativo VARCHAR(1) DEFAULT 'S',
+  CONSTRAINT tp_ativo3 CHECK (ativo IN ('S','N'))
+);
+
+
+CREATE TABLE IF NOT EXISTS tb_produtos (
+  cod_produto INT AUTO_INCREMENT PRIMARY KEY,
+  nome_produto VARCHAR(100) NOT NULL,
+  preco FLOAT(5,2) NOT NULL,
+  estoque INT NOT NULL,
+  descricao VARCHAR(200) NOT NULL,
+  tamanho VARCHAR(15) NOT NULL,
+  cor VARCHAR(10) NOT NULL,
+  ativo VARCHAR(1) DEFAULT 'S',
+  fk_cod_categoria INT NOT NULL,
+  CONSTRAINT fk_tb_produtos_tb_categoria
+    FOREIGN KEY (fk_cod_categoria)
+    REFERENCES tb_categorias (cod_categoria),
+  CONSTRAINT tp_ativo4 CHECK (ativo IN ('S','N'))
+);
+
+
+CREATE TABLE IF NOT EXISTS tb_pedidos(
+  cod_pedido INT AUTO_INCREMENT PRIMARY KEY,
+  valor_frete FLOAT(5,2) NOT NULL,
+  codigo_transportadora VARCHAR(255) NULL,
+  tipo_pagamento VARCHAR(1) DEFAULT 'D',
+  ativo VARCHAR(1) DEFAULT 'S',
+  fk_cod_usuario INT NOT NULL,
+  CONSTRAINT fk_tb_pedidos_tb_usuarios
+    FOREIGN KEY (fk_cod_usuario)
+    REFERENCES tb_usuarios (cod_usuario),
+    CONSTRAINT tp_pagamento CHECK (tipo_pagamento IN ('P','D')),
+    CONSTRAINT tp_ativo5 CHECK (ativo IN ('S','N'))
+);
+
+
+CREATE TABLE IF NOT EXISTS tb_pedidos_produtos(
+  cod_pedido_produto INT AUTO_INCREMENT PRIMARY KEY,
+  quantidade INT NOT NULL,
+  preco_pedido FLOAT(5,2) NOT NULL,
+  fk_cod_produto INT NOT NULL,
+  fk_cod_pedido INT NOT NULL,
+  CONSTRAINT fk_tb_pedidos_produtos_tb_produtos
+    FOREIGN KEY (fk_cod_produto)
+    REFERENCES tb_produtos (cod_produto),
+  CONSTRAINT fk_tb_pedidos_produtos_tb_pedidos1
+    FOREIGN KEY (fk_cod_pedido)
+    REFERENCES tb_pedidos (cod_pedido)
+);
+
+
+CREATE TABLE IF NOT EXISTS tb_imagens(
+  cod_imagem INT AUTO_INCREMENT PRIMARY KEY,
+  imagem VARCHAR(255) NOT NULL,
+  fk_cod_produto INT NOT NULL,
+  CONSTRAINT fk_tb_imagens_tb_produtos
+    FOREIGN KEY (fk_cod_produto)
+    REFERENCES tb_produtos(cod_produto)
+);
+
+
+INSERT INTO tb_usuarios VALUES (1, 'Sabrina Sandri Braga', 'sabrinateste@gmail.com', 45999353396, 15324791903, 'sabrinateste123', 'C', 'S'), (2, 'Luka Paganoti', 'lukateste@gmail.com', 45998073523, 12759755932, 'lukateste123', 'C', 'S'), (3, 'Laisa Assis', 'laisateste@gmail.com', 45998476271, 12051961964, 'laisateste123', 'C', 'S'), (4, 'Vitor Hugo', 'vitorteste@gmail.com', 45984137132, 12962616971, 'vitorteste123', 'C', 'S'), (5, 'Lucas Santos', 'lucasteste@gmail.com', 45991170168, 10416269950, 'lucasteste123', 'C', 'S');
+
+INSERT INTO tb_cidades VALUES (1, 'Cascavel', 'PR'), (2, 'Toledo', 'PR'), (3, 'Palotina', 'PR'), (4, 'Curitiba', 'PR'), (5, 'Foz do Iguaçu', 'PR');
+
+INSERT INTO tb_enderecos VALUES (1, 'Avenida das Torres', 85806095, 429, 'Ap:202', 'S', 4, 1), (2, 'Natalício Florentino Alves', 85811420, 519, 'Casa laranja', 'S', 1, 1), (3, 'Tenente José Joaquim Firmino', 85804150, 'Casa azul', 888, 'S', 2, 1), (4, 'Tranquilo Noro', 85807860, 720, 'Casa 203', 'S', 3, 1), (5, 'Jacarézinho', 85816010, 1466, 'Sobrado, acima de uma gráfica', 'S', 5, 1);
+
+INSERT INTO tb_categorias VALUES (1, 'Quadros', 'S'), (2, 'Moletons', 'S'), (3, 'Pins', 'S'), (4, 'Canecas', 'S'), (5, 'Chaveiros', 'S');
+
+INSERT INTO tb_produtos VALUES (1, 'Moletom estampa', 150.00, 20, 'Moletom com estampa 1', 'M', 'Preto', 'S', 2), (2, 'Quadro estampa', 50.00, 30, 'Quadro com estampa número 1', '40cm', 'Branco', 'S', 1), (3, 'Pins com estampa', 15.00, 40, 'Pins com estampa número 1', '4cm', 'Dourado', 'S', 3), (4, 'Caneca com estampa', 35.00, 50, 'Caneca com estampa número 1', '250ml', 'Branco', 'S', 4), (5, 'Chaveiro com estampa', 20.00, 60, 'Chaveiro com estampa número 1', '6cm', 'Dourado', 'S', 5);
+
+INSERT INTO tb_pedidos VALUES (1, 20.00, 'SD01BR', 'D', 'S', 1), (2, 15.00, 'SD02BR', 'P', 'S', 2), (3, 12.00, 'SD03BR', 'D', 'S', 3), (4, 9.00, 'SD04BR', 'P', 'S', 4),
+(5, 18.00, 'SD05BR', 'D', 'S', 1); 
+
+
+
